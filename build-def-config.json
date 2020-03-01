@@ -1,0 +1,10 @@
+{
+  "buildDefsPath": "/Users/liuhuaqing/Microsoft/build-defs/target/build-defs",
+  "buildDefs": [
+    {
+      "id": "xxx",
+      "url": "https://www.baidu.com/",
+      "name": "test.txt"
+    }
+  ]
+}
