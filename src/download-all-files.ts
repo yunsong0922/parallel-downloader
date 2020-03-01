@@ -1,5 +1,5 @@
 import * as path from "path";
-import * as buildDefConfig from "../build-def-config.json";
+import * as buildDefConfig from "../download-config.json";
 import { ParallelResultType } from "./types";
 import { downloadLogger } from "./download-logger";
 import { parallelRun } from "./parallel-runner";
@@ -15,7 +15,7 @@ export async function downloadAllFiles() {
 
     if (index < allBuildDefCount) {
       let filePath = path.join(dirPath, buildDefConfig.buildDefs[index].name);
-      let requestOptions = buildDefConfig.buildDefs[index].url;
+      let requestOptions = buildDefConfig.buildDefs[index];
       createdCount++;
 
       downloadLogger.startDownload(buildDefConfig.buildDefs[index]);
@@ -42,7 +42,7 @@ export async function downloadAllFiles() {
       }
     } else {
       return Promise.resolve({
-        type: ParallelResultType.goOn
+        type: ParallelResultType.noMore
       });
     }
   };

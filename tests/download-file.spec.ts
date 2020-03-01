@@ -7,8 +7,8 @@ describe("download file tests", () => {
   it("should return success", async () => {
     try {
       const result = await getAndWriteToFile(
-        "http://www.baidu.com",
-        "/Users/liuhuaqing/Microsoft/build-defs/target/test-1.txt"
+        { url: "http://www.baidu.com" },
+        "/Users/liuhuaqing/Microsoft/build-defs/target/test-0.txt"
       );
       expect(result.type).eq(DownloadResultType.success);
     } catch (err) {
@@ -19,11 +19,23 @@ describe("download file tests", () => {
   it("should return error", async () => {
     try {
       await getAndWriteToFile(
-        "http://www.baidu.comdddd",
+        { url: "http://www.baidu.commmmmmm" },
         "/Users/liuhuaqing/Microsoft/build-defs/target/test-1.txt"
       );
     } catch (err) {
       expect(err.type).eq(DownloadResultType.error);
+    }
+  });
+
+  it("should return success for https", async () => {
+    try {
+      let result = await getAndWriteToFile(
+        { url: "https://www.baidu.com" },
+        "/Users/liuhuaqing/Microsoft/build-defs/target/test-2.txt"
+      );
+      expect(result.type).eq(DownloadResultType.success);
+    } catch (err) {
+      console.log(err);
     }
   });
 });

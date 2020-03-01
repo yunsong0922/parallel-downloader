@@ -1,34 +1,35 @@
-import * as http from "http";
+import * as request from "request";
 import * as fs from "fs";
 import { DownloadResultType, IDownloadResult } from "./types";
 
 export const getAndWriteToFile = (
-  requestOptions: http.RequestOptions | string,
+  options: request.OptionsWithUrl,
   filePath: string
 ): Promise<IDownloadResult> => {
   return new Promise((resolve, reject) => {
-    let file = fs.createWriteStream(filePath);
-
-    http
-      .get(requestOptions, res => {
-        res.pipe(file);
-        file.on("finish", function() {
-          file.close();
-          resolve({
-            type: DownloadResultType.success
+    request.get(
+      options.url as string,
+      options,
+      (error: any, response: request.Response, body: any) => {
+        if (error) {
+          reject({
+            type: DownloadResultType.error,
+            error
           });
-        });
-      })
-      .on("error", (err: Error) => {
-        reject({
-          type: DownloadResultType.error,
-          error: err
-        });
-      })
-      .on("timeout", () => {
-        reject({
-          type: DownloadResultType.timeout
-        });
-      })
+        } else {
+          fs.writeFile(filePath, body, error => {
+            if (error) {
+              reject({
+                type: DownloadResultType.error,
+                error
+              });
+            }
+            resolve({
+              type: DownloadResultType.success
+            });
+          });
+        }
+      }
+    );
   });
 };
